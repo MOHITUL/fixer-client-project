@@ -55,7 +55,7 @@ const Register = () => {
 
 
     return (
-        <section className="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+        <section className="min-h-screen flex items-center justify-center px-4 py-12 bg-linear-to-br from-slate-950 via-slate-900 to-slate-950">
             <div className="w-full max-w-md bg-white/95 rounded-3xl shadow-2xl p-10">
 
                 <h2 className="text-3xl font-bold text-center mb-6">
@@ -118,7 +118,7 @@ const Register = () => {
 
                 <button
                     onClick={handleGoogleRegister}
-                    className="btn btn-outline w-full flex items-center justify-center gap-3"
+                    className="btn w-full flex items-center justify-center gap-3"
                 >
                     <FcGoogle className="text-xl" />
                     Continue with Google

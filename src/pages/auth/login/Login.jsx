@@ -135,7 +135,7 @@ const Login = () => {
             {/* Google */}
             <button
               onClick={handleGoogleLogin}
-              className="btn btn-outline w-full flex gap-2"
+              className="btn  w-full flex gap-2"
             >
               <img
                 src="https://www.svgrepo.com/show/475656/google-color.svg"
