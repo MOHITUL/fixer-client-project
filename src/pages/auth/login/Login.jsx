@@ -2,19 +2,21 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../../contexts/authcontexts/AuthContext";
 import { toast } from "react-toastify";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Login = () => {
   const { signInUser, googleLogin } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
 
-  const navigate = useNavigate();
-
-  // Email + Password Login
+  // ================= EMAIL + PASSWORD LOGIN =================
   const onSubmit = async ({ email, password }) => {
     try {
       await signInUser(email, password);
@@ -25,7 +27,7 @@ const Login = () => {
     }
   };
 
-  // Google Login
+  // ================= GOOGLE LOGIN =================
   const handleGoogleLogin = async () => {
     try {
       await googleLogin();
@@ -46,7 +48,6 @@ const Login = () => {
       <div className="w-full max-w-md relative z-10">
         <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden border border-slate-200/20">
 
-          
           <div className="p-10">
 
             {/* Header */}
@@ -87,7 +88,7 @@ const Login = () => {
               </div>
 
               {/* Password */}
-              <div>
+              <div className="relative">
                 <div className="flex justify-between">
                   <label className="text-sm font-semibold text-slate-700">
                     Password
@@ -101,22 +102,40 @@ const Login = () => {
                 </div>
 
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   className="input input-bordered w-full mt-2"
                   {...register("password", {
                     required: "Password is required",
                     minLength: {
-                      value: 6,
-                      message: "Password must be at least 6 characters",
+                      value: 8,
+                      message: "Password must be at least 8 characters",
+                    },
+                    pattern: {
+                      value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
+                      message:
+                        "Password must include uppercase, lowercase, number & special character",
                     },
                   })}
                 />
+
+                {/* Show/Hide toggle */}
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-600"
+                >
+                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                </button>
+
                 {errors.password && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.password.message}
                   </p>
                 )}
+                <p className="text-xs text-gray-500 mt-1">
+                  Must be 8+ characters with uppercase, lowercase, number & special character
+                </p>
               </div>
 
               {/* Submit */}
@@ -135,7 +154,7 @@ const Login = () => {
             {/* Google */}
             <button
               onClick={handleGoogleLogin}
-              className="btn  w-full flex gap-2"
+              className="btn w-full flex gap-2"
             >
               <img
                 src="https://www.svgrepo.com/show/475656/google-color.svg"
