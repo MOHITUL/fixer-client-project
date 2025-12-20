@@ -8,7 +8,7 @@ const Logo = () => {
         <div className='flex items-end'>
             <img src={logo} alt="" />
             <h3 className='
-text-4xl font-semibold bg-linear-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent transition-all duration-300 group-hover:from-blue-500 group-hover:to-blue-300'>FIXER</h3>
+text-4xl font-semibold bg-linear-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent transition-all duration-300 group-hover:from-blue-500 group-hover:to-blue-300'>CivicFix</h3>
         </div>
         </Link>
     );
