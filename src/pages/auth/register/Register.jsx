@@ -1,139 +1,204 @@
 import { useForm } from "react-hook-form";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { updateProfile } from "firebase/auth";
 import { toast } from "react-toastify";
 import { uploadImage } from "../../../utils/uploadImage";
 import { AuthContext } from "../../../contexts/authcontexts/AuthContext";
 import { FcGoogle } from "react-icons/fc";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Register = () => {
-    const { registerUser, googleSignIn } = useContext(AuthContext);
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-        reset,
-    } = useForm();
+  const { registerUser, googleSignIn } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
-    const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm();
 
-    const onSubmit = async (data) => {
-        const { name, email, password, photo } = data;
+  //NORMAL REGISTER
+  const onSubmit = async (data) => {
+    const { name, email, password, photo } = data;
 
-        try {
-            // Upload image to ImgBB
-            const imageUrl = await uploadImage(photo[0]);
+    try {
+      //Upload image
+      const imageUrl = await uploadImage(photo[0]);
 
-            // Create Firebase user
-            const result = await registerUser(email, password);
+      //Firebase register
+      const result = await registerUser(email, password);
 
-            // Update profile
-            await updateProfile(result.user, {
-                displayName: name,
-                photoURL: imageUrl,
-            });
+      // Update Firebase profile
+      await updateProfile(result.user, {
+        displayName: name,
+        photoURL: imageUrl,
+      });
 
-            toast.success("Account created successfully");
-            reset();
-            navigate("/dashboard");
-        } catch (error) {
-            toast.error(error.message || "Registration failed");
-        }
-    };
+      // Save user to MongoDB
+      const userInfo = {
+        name,
+        email,
+        image: imageUrl,
+        role: "citizen",
+      };
 
-    const handleGoogleRegister = async () => {
-        try {
-            const result = await googleSignIn();
-            console.log(result);
-            toast.success("Logged in with Google");
-            navigate("/dashboard");
-        } catch (error) {
-            toast.error(error.message || "Google login failed");
-        }
-    };
+      await fetch(`${import.meta.env.VITE_API_URL}/users`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(userInfo),
+      });
 
+      toast.success("Account created successfully");
+      reset();
+      navigate("/");
+    } catch (error) {
+      toast.error(error.message || "Registration failed");
+    }
+  };
 
-    return (
-        <section className="min-h-screen flex items-center justify-center px-4 py-12 bg-linear-to-br from-slate-950 via-slate-900 to-slate-950">
-            <div className="w-full max-w-md bg-white/95 rounded-3xl shadow-2xl p-10">
+  //GOOGLE REGISTER
 
-                <h2 className="text-3xl font-bold text-center mb-6">
-                    Create Account
-                </h2>
+  const handleGoogleRegister = async () => {
+    try {
+      const result = await googleSignIn();
+      const user = result.user;
 
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      const userInfo = {
+        name: user.displayName,
+        email: user.email,
+        image: user.photoURL,
+        role: "citizen",
+      };
 
-                    {/* Name */}
-                    <input
-                        type="text"
-                        placeholder="Full Name"
-                        className="input input-bordered w-full"
-                        {...register("name", { required: "Name is required" })}
-                    />
-                    {errors.name && <p className="text-red-500">{errors.name.message}</p>}
+      await fetch(`${import.meta.env.VITE_API_URL}/users`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(userInfo),
+      });
 
-                    {/* Email */}
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        className="input input-bordered w-full"
-                        {...register("email", { required: "Email is required" })}
-                    />
-                    {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+      toast.success("Logged in with Google");
+      navigate("/");
+    } catch (error) {
+      toast.error(error.message || "Google login failed");
+    }
+  };
 
-                    {/* Password */}
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        className="input input-bordered w-full"
-                        {...register("password", {
-                            required: "Password is required",
-                            minLength: { value: 6, message: "Minimum 6 characters" },
-                        })}
-                    />
-                    {errors.password && (
-                        <p className="text-red-500">{errors.password.message}</p>
-                    )}
+  return (
+    <section className="min-h-screen flex items-center justify-center  bg-linear-to-br from-slate-950 via-slate-900 to-slate-950">
+      <div className="w-full max-w-md bg-white/95 rounded-3xl shadow-2xl p-10">
 
-                    {/* Photo Upload */}
-                    <input
-                        type="file"
-                        accept="image/*"
-                        className="file-input file-input-bordered w-full"
-                        {...register("photo", { required: "Photo is required" })}
-                    />
-                    {errors.photo && <p className="text-red-500">{errors.photo.message}</p>}
+        <h2 className="text-3xl font-bold text-center mb-6">
+          Create Account
+        </h2>
 
-                    <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="btn btn-primary w-full mt-4"
-                    >
-                        {isSubmitting ? "Creating..." : "Register"}
-                    </button>
-                </form>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
-                <div className="divider my-6">OR</div>
+          {/* Name */}
+          <input
+            type="text"
+            placeholder="Full Name"
+            className="input input-bordered w-full"
+            {...register("name", { required: "Name is required" })}
+          />
+          {errors.name && (
+            <p className="text-red-500 text-sm">{errors.name.message}</p>
+          )}
 
-                <button
-                    onClick={handleGoogleRegister}
-                    className="btn w-full flex items-center justify-center gap-3"
-                >
-                    <FcGoogle className="text-xl" />
-                    Continue with Google
-                </button>
+          {/* Photo Upload */}
+          <input
+            type="file"
+            accept="image/*"
+            className="file-input file-input-bordered w-full"
+            {...register("photo", { required: "Photo is required" })}
+          />
+          {errors.photo && (
+            <p className="text-red-500 text-sm">{errors.photo.message}</p>
+          )}
 
-                <p className="text-center text-sm mt-4">
-                    Already have an account?{" "}
-                    <Link to="/login" className="text-blue-600 font-semibold">
-                        Login
-                    </Link>
-                </p>
+          {/* Email */}
+          <input
+            type="email"
+            placeholder="Email"
+            className="input input-bordered w-full"
+            {...register("email", { required: "Email is required" })}
+          />
+          {errors.email && (
+            <p className="text-red-500 text-sm">{errors.email.message}</p>
+          )}
 
-            </div>
-        </section>
-    );
+          {/* Password */}
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              className="input input-bordered w-full"
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters",
+                },
+                pattern: {
+                  value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
+                  message:
+                    "Password must include uppercase, lowercase, number & special character",
+                },
+              })}
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password.message}</p>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-600"
+            >
+              {showPassword ? <FiEyeOff /> : <FiEye />}
+            </button>
+          </div>
+          <p className="text-xs text-gray-500">
+            Must be 8+ characters with uppercase, lowercase, number & special character
+          </p>
+
+          
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="btn btn-primary w-full mt-4"
+          >
+            {isSubmitting ? "Creating..." : "Register"}
+          </button>
+        </form>
+
+        <div className="divider my-6">OR</div>
+
+        <button
+          onClick={handleGoogleRegister}
+          className="btn w-full flex items-center justify-center gap-3"
+        >
+          <FcGoogle className="text-xl" />
+          Continue with Google
+        </button>
+
+        <p className="text-center text-sm mt-4">
+          Already have an account?{" "}
+          <Link to="/login" className="text-blue-600 font-semibold">
+            Login
+          </Link>
+        </p>
+
+      </div>
+    </section>
+  );
 };
 
 export default Register;

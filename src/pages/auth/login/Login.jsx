@@ -19,7 +19,7 @@ const Login = () => {
     try {
       await signInUser(email, password);
       toast.success("Login successful");
-      navigate("/dashboard");
+      navigate("/");
     } catch (error) {
       toast.error(error.message || "Login failed");
     }
