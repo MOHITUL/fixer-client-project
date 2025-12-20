@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  signOut,
 } from 'firebase/auth';
 import { auth } from '../../firebase/firebase.init';
 
@@ -23,7 +24,12 @@ const AuthProvider = ({ children }) => {
     return signInWithPopup(auth, googleProvider);
   };
 
+  const signOutUser = () =>{
+    return signOut(auth);
+  }
+
   const authInfo = {
+    signOutUser,
     registerUser,
     signInUser,
     googleLogin,
