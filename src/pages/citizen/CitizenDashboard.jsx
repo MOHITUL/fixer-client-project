@@ -168,7 +168,7 @@ const CitizenDashboard = () => {
                         </div>
                         
                         <Link 
-                            to="/report-issue" 
+                            to="/citizen/report" 
                             className="w-full bg-white text-blue-600 px-6 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-all text-center shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                         >
                             Report New Issue

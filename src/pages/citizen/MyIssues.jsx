@@ -128,7 +128,7 @@ const MyIssues = () => {
                             {statusFilter ? `No ${statusFilter} issues to display.` : "You haven't reported any issues yet."}
                         </p>
                         <Link 
-                            to="/report-issue"
+                            to="/citizen/report"
                             className="inline-block px-6 py-3 bg-linear-to-r from-blue-600 to-blue-500 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-600 transition-all"
                         >
                             Report Your First Issue

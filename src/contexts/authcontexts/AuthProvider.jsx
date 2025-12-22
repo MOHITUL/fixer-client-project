@@ -26,6 +26,8 @@ const AuthProvider = ({ children }) => {
 
     const logOut = () => {
         setLoading(true);
+       
+        localStorage.removeItem('access-token');
         return signOut(auth);
     }
 
@@ -33,17 +35,23 @@ const AuthProvider = ({ children }) => {
         return updateProfile(auth.currentUser, profile)
     }
 
-    // observe user state
-    useEffect(() => {
-        const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
-            setLoading(false);
-            console.log(currentUser)
-        })
-        return () => {
-            unSubscribe();
+    
+   useEffect(() => {
+    const unSubscribe = onAuthStateChanged(auth, async (currentUser) => {
+        setUser(currentUser);
+        
+        if (currentUser) {
+            
+            const token = await currentUser.getIdToken(); 
+            localStorage.setItem('access-token', token);
+            console.log("Token stored in LocalStorage");
+        } else {
+            localStorage.removeItem('access-token');
         }
-    }, [])
+        setLoading(false);
+    });
+    return () => unSubscribe();
+}, []);
 
     const authInfo = {
         user,
@@ -56,9 +64,9 @@ const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext value={authInfo}>
+        <AuthContext.Provider value={authInfo}>
             {children}
-        </AuthContext>
+        </AuthContext.Provider>
     );
 };
 
