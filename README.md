@@ -1,4 +1,21 @@
-# Civic Issue Reporting Platform
+Website Name: CivicFix
+
+live link: https://civic-fix-project-96.netlify.app/
+
+admin: admin1@gmail.com
+
+pass: Admin1@gmail.com
+
+citizen: citi5@gmail.com
+
+pass: Citi5@gmail.com
+
+staff: staff5@gmail.com
+
+pass: Staff5@gmail.com
+
+
+ Civic Issue Reporting Platform
 
 A modern web application for citizens to report and track civic issues with real-time management capabilities.
 
