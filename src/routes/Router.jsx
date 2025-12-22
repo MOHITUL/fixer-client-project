@@ -20,6 +20,9 @@ import ManageStaff from "../pages/admin/ManageStaff";
 import PaymentPage from "../pages/admin/PaymentPage";
 import AdminAllIssues from "../pages/admin/AdminAllIssues";
 import AdminProfile from "../pages/admin/AdminProfile";
+import StaffDashboard from "../pages/staff/StaffDashboard";
+import AssignedIssues from "../pages/staff/AssignedIssues";
+import StaffProfile from "../pages/staff/StaffProfile";
 
 
 export const router = createBrowserRouter([
@@ -92,6 +95,20 @@ export const router = createBrowserRouter([
             {
                 path: "admin/profile",
                 element:(<PrivateRoute><AdminProfile/></PrivateRoute>)
+            },
+
+            // staff
+            {
+                path: "staff/dashboard",
+                element: (<PrivateRoute><StaffDashboard/></PrivateRoute>)
+            },
+            {
+                path: "staff/assigned-issues",
+                element: (<PrivateRoute><AssignedIssues/></PrivateRoute>)
+            },
+            {
+                path: "staff/profile",
+                element: (<PrivateRoute><StaffProfile/></PrivateRoute>)
             },
             
 

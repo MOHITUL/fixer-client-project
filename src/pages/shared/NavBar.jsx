@@ -50,6 +50,15 @@ const NavBar = () => {
     </>
   );
 
+  
+  const staffLinks = (
+    <>
+      <li><NavLink to="/staff/dashboard" className={navLinkClass}>Dashboard</NavLink></li>
+      <li><NavLink to="/staff/assigned-issues" className={navLinkClass}>Assigned Issues</NavLink></li>
+      <li><NavLink to="/staff/profile" className={navLinkClass}>Profile</NavLink></li>
+    </>
+  );
+
   if (isLoading) return null;
 
   return (
@@ -57,7 +66,6 @@ const NavBar = () => {
       <div className="px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           
-          {/* Logo */}
           <Logo />
 
           {/* Desktop Menu */}
@@ -66,6 +74,7 @@ const NavBar = () => {
               {commonLinks}
               {role === "citizen" && citizenLinks}
               {role === "admin" && adminLinks}
+              {role === "staff" && staffLinks} 
             </ul>
           </div>
 
@@ -86,14 +95,13 @@ const NavBar = () => {
                   />
                 </button>
                 
-                {/* Dropdown Menu */}
                 <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
                   <div className="px-4 py-3 border-b border-gray-100">
                     <p className="font-semibold text-sm">{user.displayName}</p>
                     <p className="text-xs text-gray-500 truncate">{user.email}</p>
                   </div>
                   <div className="py-1">
-                    {/* Role-Specific Profile/Dashboard Links */}
+                    {/* Role-Specific Dropdown Links */}
                     {role === "citizen" && (
                       <>
                         <Link to="/citizen/profile" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50">Profile</Link>
@@ -106,13 +114,22 @@ const NavBar = () => {
                         <Link to="/admin/dashboard" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50">Dashboard</Link>
                       </>
                     )}
+                    {/* Staff Specific Dropdown Links */}
+                    {role === "staff" && (
+                      <>
+                        <Link to="/staff/profile" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50">Profile</Link>
+                        <Link to="/staff/dashboard" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50">Dashboard</Link>
+                      </>
+                    )}
+                    <Link to={"/"}>
                     <button onClick={handleLogout} className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50">Logout</button>
+                    </Link>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Mobile Menu Toggle Button */}
+            {/* Mobile Menu Toggle */}
             <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden p-2 rounded-lg hover:bg-gray-100">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {mobileMenuOpen ? (
@@ -134,6 +151,7 @@ const NavBar = () => {
               {commonLinks}
               {role === "citizen" && citizenLinks}
               {role === "admin" && adminLinks}
+              {role === "staff" && staffLinks} 
             </ul>
 
             {!user ? (
@@ -147,6 +165,12 @@ const NavBar = () => {
                   <>
                     <Link to="/citizen/profile" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 hover:bg-gray-50 rounded-lg">Profile</Link>
                     <Link to="/citizen/dashboard" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 hover:bg-gray-50 rounded-lg">Dashboard</Link>
+                  </>
+                )}
+                {role === "staff" && (
+                  <>
+                    <Link to="/staff/profile" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 hover:bg-gray-50 rounded-lg">Profile</Link>
+                    <Link to="/staff/dashboard" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 hover:bg-gray-50 rounded-lg">Dashboard</Link>
                   </>
                 )}
                 {role === "admin" && (
