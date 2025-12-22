@@ -19,7 +19,12 @@ const Login = () => {
   // ================= EMAIL + PASSWORD LOGIN =================
   const onSubmit = async ({ email, password }) => {
     try {
-      await signInUser(email, password);
+      const result = await signInUser(email, password);
+
+      // 🔐 SAVE TOKEN
+      const token = await result.user.getIdToken();
+      localStorage.setItem("access-token", token);
+
       toast.success("Login successful");
       navigate("/");
     } catch (error) {
@@ -30,9 +35,14 @@ const Login = () => {
   // ================= GOOGLE LOGIN =================
   const handleGoogleLogin = async () => {
     try {
-      await googleLogin();
+      const result = await googleLogin();
+
+      // 🔐 SAVE TOKEN
+      const token = await result.user.getIdToken();
+      localStorage.setItem("access-token", token);
+
       toast.success("Google login successful");
-      navigate("/dashboard");
+      navigate("/");
     } catch (error) {
       toast.error(error.message || "Google login failed");
     }
@@ -41,16 +51,12 @@ const Login = () => {
   return (
     <section className="min-h-screen relative overflow-hidden flex items-center justify-center px-4 py-12">
 
-      {/* Background */}
       <div className="absolute inset-0 bg-linear-to-br from-slate-950 via-slate-900 to-slate-950" />
 
-      {/* Card */}
       <div className="w-full max-w-md relative z-10">
         <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden border border-slate-200/20">
-
           <div className="p-10">
 
-            {/* Header */}
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-slate-900">
                 Welcome Back
@@ -60,7 +66,6 @@ const Login = () => {
               </p>
             </div>
 
-            {/* FORM */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
 
               {/* Email */}
@@ -93,10 +98,7 @@ const Login = () => {
                   <label className="text-sm font-semibold text-slate-700">
                     Password
                   </label>
-                  <Link
-                    to="/forgot-password"
-                    className="text-sm text-blue-600"
-                  >
+                  <Link to="/forgot-password" className="text-sm text-blue-600">
                     Forgot?
                   </Link>
                 </div>
@@ -107,23 +109,13 @@ const Login = () => {
                   className="input input-bordered w-full mt-2"
                   {...register("password", {
                     required: "Password is required",
-                    minLength: {
-                      value: 8,
-                      message: "Password must be at least 8 characters",
-                    },
-                    pattern: {
-                      value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
-                      message:
-                        "Password must include uppercase, lowercase, number & special character",
-                    },
                   })}
                 />
 
-                {/* Show/Hide toggle */}
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-600"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600"
                 >
                   {showPassword ? <FiEyeOff /> : <FiEye />}
                 </button>
@@ -133,12 +125,8 @@ const Login = () => {
                     {errors.password.message}
                   </p>
                 )}
-                <p className="text-xs text-gray-500 mt-1">
-                  Must be 8+ characters with uppercase, lowercase, number & special character
-                </p>
               </div>
 
-              {/* Submit */}
               <button
                 type="submit"
                 disabled={isSubmitting}
@@ -148,10 +136,8 @@ const Login = () => {
               </button>
             </form>
 
-            {/* Divider */}
             <div className="divider my-6">OR</div>
 
-            {/* Google */}
             <button
               onClick={handleGoogleLogin}
               className="btn w-full flex gap-2"
@@ -164,13 +150,9 @@ const Login = () => {
               Continue with Google
             </button>
 
-            {/* Register */}
             <p className="text-center text-sm text-slate-600 mt-6">
               Don't have an account?{" "}
-              <Link
-                to="/register"
-                className="font-semibold text-blue-600"
-              >
+              <Link to="/register" className="font-semibold text-blue-600">
                 Create account
               </Link>
             </p>

@@ -8,6 +8,12 @@ import ErrorPage from "../pages/error/ErrorPage";
 import AllIssues from "../pages/issues/AllIssues";
 import About from "../pages/about/About";
 import Contact from "../pages/contact/Contact";
+import PrivateRoute from "../components/PrivateRoute";
+import Profile from "../pages/profile/Profile";
+import CitizenDashboard from "../pages/citizen/CitizenDashboard";
+import MyIssues from "../pages/citizen/MyIssues";
+import ReportIssue from "../pages/citizen/ReportIssue";
+import CitizenProfile from "../pages/citizen/CitizenProfile";
 
 
 export const router = createBrowserRouter([
@@ -31,7 +37,31 @@ export const router = createBrowserRouter([
             {
                 path: "contact",
                 Component: Contact,
-            }
+            },
+            {
+                path:"profile",
+                element: (<PrivateRoute>
+                    <Profile/>
+                </PrivateRoute>)
+            },
+            // citizen
+            {
+                path:"citizen/dashboard",
+                element: (<PrivateRoute><CitizenDashboard/></PrivateRoute>)
+            },
+            {
+                path: "citizen/issues",
+                element: (<PrivateRoute><MyIssues/></PrivateRoute>)
+            },
+            {
+                path: "citizen/report",
+                element: (<PrivateRoute><ReportIssue/></PrivateRoute>)
+            },
+            {
+                path: "citizen/profile",
+                element: (<PrivateRoute><CitizenProfile/></PrivateRoute>)
+            },
+
         ]
     },
     {

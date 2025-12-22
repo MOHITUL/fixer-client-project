@@ -9,7 +9,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Register = () => {
-  const { registerUser, googleSignIn } = useContext(AuthContext);
+  const { registerUser, googleLogin } = useContext(AuthContext); // ✅ FIXED
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -20,16 +20,20 @@ const Register = () => {
     reset,
   } = useForm();
 
-  //NORMAL REGISTER
+  // 🔵 NORMAL REGISTER
   const onSubmit = async (data) => {
     const { name, email, password, photo } = data;
 
     try {
-      //Upload image
+      // Upload image
       const imageUrl = await uploadImage(photo[0]);
 
-      //Firebase register
+      // Firebase register
       const result = await registerUser(email, password);
+
+      // 🔐 Save token
+      const token = await result.user.getIdToken();
+      localStorage.setItem("access-token", token);
 
       // Update Firebase profile
       await updateProfile(result.user, {
@@ -47,9 +51,7 @@ const Register = () => {
 
       await fetch(`${import.meta.env.VITE_API_URL}/users`, {
         method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
+        headers: { "content-type": "application/json" },
         body: JSON.stringify(userInfo),
       });
 
@@ -61,12 +63,15 @@ const Register = () => {
     }
   };
 
-  //GOOGLE REGISTER
-
+  // 🔵 GOOGLE REGISTER
   const handleGoogleRegister = async () => {
     try {
-      const result = await googleSignIn();
+      const result = await googleLogin(); // ✅ FIXED
       const user = result.user;
+
+      // 🔐 Save token
+      const token = await user.getIdToken();
+      localStorage.setItem("access-token", token);
 
       const userInfo = {
         name: user.displayName,
@@ -77,9 +82,7 @@ const Register = () => {
 
       await fetch(`${import.meta.env.VITE_API_URL}/users`, {
         method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
+        headers: { "content-type": "application/json" },
         body: JSON.stringify(userInfo),
       });
 
@@ -91,7 +94,7 @@ const Register = () => {
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center  bg-linear-to-br from-slate-950 via-slate-900 to-slate-950">
+    <section className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-950 via-slate-900 to-slate-950">
       <div className="w-full max-w-md bg-white/95 rounded-3xl shadow-2xl p-10">
 
         <h2 className="text-3xl font-bold text-center mb-6">
@@ -100,40 +103,30 @@ const Register = () => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
-          {/* Name */}
           <input
             type="text"
             placeholder="Full Name"
             className="input input-bordered w-full"
             {...register("name", { required: "Name is required" })}
           />
-          {errors.name && (
-            <p className="text-red-500 text-sm">{errors.name.message}</p>
-          )}
+          {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
 
-          {/* Photo Upload */}
           <input
             type="file"
             accept="image/*"
             className="file-input file-input-bordered w-full"
             {...register("photo", { required: "Photo is required" })}
           />
-          {errors.photo && (
-            <p className="text-red-500 text-sm">{errors.photo.message}</p>
-          )}
+          {errors.photo && <p className="text-red-500 text-sm">{errors.photo.message}</p>}
 
-          {/* Email */}
           <input
             type="email"
             placeholder="Email"
             className="input input-bordered w-full"
             {...register("email", { required: "Email is required" })}
           />
-          {errors.email && (
-            <p className="text-red-500 text-sm">{errors.email.message}</p>
-          )}
+          {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
 
-          {/* Password */}
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
@@ -141,34 +134,21 @@ const Register = () => {
               className="input input-bordered w-full"
               {...register("password", {
                 required: "Password is required",
-                minLength: {
-                  value: 8,
-                  message: "Password must be at least 8 characters",
-                },
+                minLength: { value: 8, message: "Minimum 8 characters" },
                 pattern: {
                   value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
-                  message:
-                    "Password must include uppercase, lowercase, number & special character",
+                  message: "Uppercase, lowercase, number & special char required",
                 },
               })}
             />
-            {errors.password && (
-              <p className="text-red-500 text-sm">{errors.password.message}</p>
-            )}
-
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-600"
+              className="absolute right-2 top-1/2 -translate-y-1/2"
             >
               {showPassword ? <FiEyeOff /> : <FiEye />}
             </button>
           </div>
-          <p className="text-xs text-gray-500">
-            Must be 8+ characters with uppercase, lowercase, number & special character
-          </p>
-
-          
 
           <button
             type="submit"

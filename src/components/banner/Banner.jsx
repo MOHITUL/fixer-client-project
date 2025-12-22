@@ -114,27 +114,7 @@ const Banner = () => {
             {/* Dynamic Gradient Overlay */}
             <div className={`absolute inset-0 bg-linear-to-br ${currentTheme.gradient} transition-all duration-1000`}></div>
 
-            {/* Floating City Elements */}
-            <div className="absolute inset-0 overflow-hidden">
-                {[...Array(20)].map((_, i) => {
-                    const randomX = Math.random() * 200 - 100;
-                    const randomY = Math.random() * -100;
-                    return (
-                        <div
-                            key={i}
-                            className={`absolute w-1 h-1 ${currentTheme.particles} rounded-full animate-float-random`}
-                            style={{
-                                left: `${Math.random() * 100}%`,
-                                top: `${Math.random() * 100}%`,
-                                animationDelay: `${Math.random() * 5}s`,
-                                animationDuration: `${10 + Math.random() * 10}s`,
-                                '--tx': `${randomX}px`,
-                                '--ty': `${randomY}vh`
-                            }}
-                        ></div>
-                    );
-                })}
-            </div>
+            
 
             {/* Main Content */}
             <div className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 py-20">
@@ -246,7 +226,7 @@ const Banner = () => {
                                             {issueTypes.map((issue, idx) => (
                                                 <div
                                                     key={idx}
-                                                    className="group relative overflow-hidden bg-linear-to-br from-gray-50 to-gray-100 rounded-xl p-4 cursor-pointer hover:shadow-lg transition-all duration-300 border-2 border-transparent hover:border-blue-500"
+                                                    className="group relative overflow-hidden bg-linear-to-br from-gray-50 to-gray-100 rounded-xl p-4  transition-all duration-300 border-2 border-transparent"
                                                     style={{ animationDelay: `${idx * 0.1}s` }}
                                                 >
                                                     <div className="text-center">
@@ -261,25 +241,9 @@ const Banner = () => {
                                         </div>
                                     </div>
 
-                                    {/* Mock Location Input */}
-                                    <div className="space-y-3 mb-6">
-                                        <label className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Location</label>
-                                        <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-4 border border-gray-200">
-                                            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            </svg>
-                                            <span className="text-gray-400 text-sm">Use current location</span>
-                                        </div>
-                                    </div>
+                                    
 
-                                    {/* Submit Button */}
-                                    <button className="w-full bg-linear-to-r from-blue-600 to-purple-600 text-white font-bold py-4 rounded-xl hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2">
-                                        <span>Submit Report</span>
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </button>
+                                    
                                 </div>
 
                                 {/* Floating Achievement Badges */}

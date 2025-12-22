@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-import { AuthContext } from '../contexts/authcontexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { AuthContext } from '../contexts/authcontexts/AuthContext';
 
 const useRole = () => {
     const {user, loading} = useContext(AuthContext);
