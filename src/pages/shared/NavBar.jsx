@@ -45,7 +45,7 @@ const NavBar = () => {
       <li><NavLink to="/admin/manage-users" className={navLinkClass}>Manage Users</NavLink></li>
       <li><NavLink to="/admin/manage-staff" className={navLinkClass}>Manage Staff</NavLink></li>
       <li><NavLink to="/admin/payments" className={navLinkClass}>Payments</NavLink></li>
-      <li><NavLink to="/admin/all-issues" className={navLinkClass}>All Issues</NavLink></li>
+      <li><NavLink to="/admin/all-issues" className={navLinkClass}>Manage Issues</NavLink></li>
       <li><NavLink to="/admin/profile" className={navLinkClass}>Profile</NavLink></li>
     </>
   );
