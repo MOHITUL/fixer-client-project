@@ -14,6 +14,12 @@ import CitizenDashboard from "../pages/citizen/CitizenDashboard";
 import MyIssues from "../pages/citizen/MyIssues";
 import ReportIssue from "../pages/citizen/ReportIssue";
 import CitizenProfile from "../pages/citizen/CitizenProfile";
+import AdminDashboard from "../pages/admin/AdminDashboard";
+import ManageUsersPage from "../pages/admin/ManageUsersPage";
+import ManageStaff from "../pages/admin/ManageStaff";
+import PaymentPage from "../pages/admin/PaymentPage";
+import AdminAllIssues from "../pages/admin/AdminAllIssues";
+import AdminProfile from "../pages/admin/AdminProfile";
 
 
 export const router = createBrowserRouter([
@@ -61,6 +67,33 @@ export const router = createBrowserRouter([
                 path: "citizen/profile",
                 element: (<PrivateRoute><CitizenProfile/></PrivateRoute>)
             },
+
+            // admin
+            {
+                path: "admin/dashboard",
+                element:(<PrivateRoute><AdminDashboard/></PrivateRoute>)
+            },
+            {
+                path: "admin/manage-users",
+                element:(<PrivateRoute><ManageUsersPage/></PrivateRoute>)
+            },
+            {
+                path: "admin/manage-staff",
+                element:(<PrivateRoute><ManageStaff/></PrivateRoute>)
+            },
+            {
+                path: "admin/payments",
+                element:(<PrivateRoute><PaymentPage/></PrivateRoute>)
+            },
+            {
+                path: "admin/all-issues",
+                element:(<PrivateRoute><AdminAllIssues/></PrivateRoute>)
+            },
+            {
+                path: "admin/profile",
+                element:(<PrivateRoute><AdminProfile/></PrivateRoute>)
+            },
+            
 
         ]
     },

@@ -9,7 +9,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Register = () => {
-  const { registerUser, googleLogin } = useContext(AuthContext); // ✅ FIXED
+  const { registerUser, googleLogin } = useContext(AuthContext); 
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -20,7 +20,7 @@ const Register = () => {
     reset,
   } = useForm();
 
-  // 🔵 NORMAL REGISTER
+  // NORMAL REGISTER
   const onSubmit = async (data) => {
     const { name, email, password, photo } = data;
 
@@ -31,7 +31,7 @@ const Register = () => {
       // Firebase register
       const result = await registerUser(email, password);
 
-      // 🔐 Save token
+      // Save token
       const token = await result.user.getIdToken();
       localStorage.setItem("access-token", token);
 
@@ -63,13 +63,13 @@ const Register = () => {
     }
   };
 
-  // 🔵 GOOGLE REGISTER
+  // GOOGLE REGISTER
   const handleGoogleRegister = async () => {
     try {
-      const result = await googleLogin(); // ✅ FIXED
+      const result = await googleLogin(); // 
       const user = result.user;
 
-      // 🔐 Save token
+      // Save token
       const token = await user.getIdToken();
       localStorage.setItem("access-token", token);
 

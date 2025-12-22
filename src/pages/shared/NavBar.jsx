@@ -20,47 +20,43 @@ const NavBar = () => {
       ? "text-gray-900 font-medium px-3 py-1.5 relative after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-gray-900"
       : "text-gray-600 hover:text-gray-900 px-3 py-1.5 transition-colors duration-200";
 
+  // --- Link Groups ---
+
   const commonLinks = (
     <>
-      <li>
-        <NavLink to="/" className={navLinkClass}>Home</NavLink>
-      </li>
-      <li>
-        <NavLink to="/all-issues" className={navLinkClass}>All Issues</NavLink>
-      </li>
-      <li>
-        <NavLink to="/about" className={navLinkClass}>About</NavLink>
-      </li>
-      <li>
-        <NavLink to="/contact" className={navLinkClass}>Contact</NavLink>
-      </li>
+      <li><NavLink to="/" className={navLinkClass}>Home</NavLink></li>
+      <li><NavLink to="/all-issues" className={navLinkClass}>All Issues</NavLink></li>
+      <li><NavLink to="/about" className={navLinkClass}>About</NavLink></li>
+      <li><NavLink to="/contact" className={navLinkClass}>Contact</NavLink></li>
     </>
   );
 
   const citizenLinks = (
     <>
-      <li>
-        <NavLink to="/citizen/dashboard" className={navLinkClass}>Dashboard</NavLink>
-      </li>
-      <li>
-        <NavLink to="/citizen/issues" className={navLinkClass}>My Issues</NavLink>
-      </li>
-      <li>
-        <NavLink to="/citizen/report" className={navLinkClass}>Report Issue</NavLink>
-      </li>
-      <li>
-        <NavLink to="/citizen/profile" className={navLinkClass}>Profile</NavLink>
-      </li>
+      <li><NavLink to="/citizen/dashboard" className={navLinkClass}>Dashboard</NavLink></li>
+      <li><NavLink to="/citizen/issues" className={navLinkClass}>My Issues</NavLink></li>
+      <li><NavLink to="/citizen/report" className={navLinkClass}>Report Issue</NavLink></li>
     </>
   );
 
-  if (isLoading) return null; 
+  const adminLinks = (
+    <>
+      <li><NavLink to="/admin/dashboard" className={navLinkClass}>Dashboard</NavLink></li>
+      <li><NavLink to="/admin/manage-users" className={navLinkClass}>Manage Users</NavLink></li>
+      <li><NavLink to="/admin/manage-staff" className={navLinkClass}>Manage Staff</NavLink></li>
+      <li><NavLink to="/admin/payments" className={navLinkClass}>Payments</NavLink></li>
+      <li><NavLink to="/admin/all-issues" className={navLinkClass}>All Issues</NavLink></li>
+      <li><NavLink to="/admin/profile" className={navLinkClass}>Profile</NavLink></li>
+    </>
+  );
+
+  if (isLoading) return null;
 
   return (
     <nav className="bg-white/70 backdrop-blur-xl sticky top-0 z-50 border-b border-gray-200/50">
       <div className="px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-
+          
           {/* Logo */}
           <Logo />
 
@@ -69,10 +65,11 @@ const NavBar = () => {
             <ul className="flex items-center gap-1">
               {commonLinks}
               {role === "citizen" && citizenLinks}
+              {role === "admin" && adminLinks}
             </ul>
           </div>
 
-          {/* Right Side */}
+          {/* Right Side (User Profile / Auth) */}
           <div className="flex items-center gap-4">
             {!user ? (
               <div className="hidden lg:flex items-center gap-3">
@@ -82,18 +79,31 @@ const NavBar = () => {
             ) : (
               <div className="relative group hidden lg:block">
                 <button className="flex items-center gap-2 px-2 py-2 rounded-full hover:bg-gray-50">
-                  <img src={user.photoURL || "https://i.ibb.co/2yZ4Z3b/user.png"} alt="profile" className="w-9 h-9 rounded-full object-cover ring-2 ring-gray-200" />
+                  <img 
+                    src={user.photoURL || "https://i.ibb.co/2yZ4Z3b/user.png"} 
+                    alt="profile" 
+                    className="w-9 h-9 rounded-full object-cover ring-2 ring-gray-200" 
+                  />
                 </button>
+                
+                {/* Dropdown Menu */}
                 <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
                   <div className="px-4 py-3 border-b border-gray-100">
                     <p className="font-semibold text-sm">{user.displayName}</p>
                     <p className="text-xs text-gray-500 truncate">{user.email}</p>
                   </div>
                   <div className="py-1">
+                    {/* Role-Specific Profile/Dashboard Links */}
                     {role === "citizen" && (
                       <>
                         <Link to="/citizen/profile" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50">Profile</Link>
                         <Link to="/citizen/dashboard" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50">Dashboard</Link>
+                      </>
+                    )}
+                    {role === "admin" && (
+                      <>
+                        <Link to="/admin/profile" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50">Profile</Link>
+                        <Link to="/admin/dashboard" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50">Dashboard</Link>
                       </>
                     )}
                     <button onClick={handleLogout} className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50">Logout</button>
@@ -102,7 +112,7 @@ const NavBar = () => {
               </div>
             )}
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Toggle Button */}
             <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden p-2 rounded-lg hover:bg-gray-100">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {mobileMenuOpen ? (
@@ -116,13 +126,14 @@ const NavBar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Content */}
       {mobileMenuOpen && (
         <div className="lg:hidden bg-white border-t">
           <div className="px-6 py-4 space-y-2">
             <ul className="space-y-1">
               {commonLinks}
               {role === "citizen" && citizenLinks}
+              {role === "admin" && adminLinks}
             </ul>
 
             {!user ? (
@@ -136,6 +147,12 @@ const NavBar = () => {
                   <>
                     <Link to="/citizen/profile" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 hover:bg-gray-50 rounded-lg">Profile</Link>
                     <Link to="/citizen/dashboard" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 hover:bg-gray-50 rounded-lg">Dashboard</Link>
+                  </>
+                )}
+                {role === "admin" && (
+                  <>
+                    <Link to="/admin/profile" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 hover:bg-gray-50 rounded-lg">Profile</Link>
+                    <Link to="/admin/dashboard" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 hover:bg-gray-50 rounded-lg">Dashboard</Link>
                   </>
                 )}
                 <button onClick={handleLogout} className="w-full text-left px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg">Logout</button>
