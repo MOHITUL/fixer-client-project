@@ -23,6 +23,7 @@ import AdminProfile from "../pages/admin/AdminProfile";
 import StaffDashboard from "../pages/staff/StaffDashboard";
 import AssignedIssues from "../pages/staff/AssignedIssues";
 import StaffProfile from "../pages/staff/StaffProfile";
+import AllIssuesDetails from "../pages/issues/AllIssuesDetails";
 
 
 export const router = createBrowserRouter([
@@ -38,6 +39,12 @@ export const router = createBrowserRouter([
             {
                 path: "all-issues",
                 Component: AllIssues,
+            },
+            {
+                path: "issue-details/:id",
+                element: (<PrivateRoute>
+                    <AllIssuesDetails/>
+                </PrivateRoute>)
             },
             {
                 path: "about",
